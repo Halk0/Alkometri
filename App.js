@@ -9,15 +9,29 @@ export default function App() {
   const [valueBottle, setValue] = useState(0);
   const [openHours, setOpenHours] = useState(false);
   const [valueHours, setValueHours] = useState(0);
-  function laske(context) {
-    var palaute = {}
-    var litra = context.pullot * 0.33
-    var grammat = context.litra * 8 * 4.5
-    var poltto = context.paino / 10
+  const [valueWeight, setValueWeight] = useState(0);
+  const [valueGender, setValueGender] = useState(null);
+  const [valueTulos, setValueTulos] = useState({ tulos: 0, grammat_jaljella: 0, juotu_litroissa: 0 });
 
-    palaute.tulos = grammat / (context.paino * context.sukupuoli)
-    palaute.grammat_jaljella = grammat - (context.aika * poltto)
-    palaute.juotu_litroissa = litra
+
+  function laske() {
+    var palaute = {}
+    var litra = valueBottle * 0.33
+    var grammat = litra * 8 * 4.5
+    var poltto = valueWeight / 10
+    var sukupuoliKerroin = 0;
+
+    if (valueGender == 'Male') {
+      sukupuoliKerroin = 0.7;
+    } else if (valueGender == 'Female') {
+      sukupuoliKerroin = 0.6;
+    } else {
+      console.log('Radio button not pressed');
+    }
+    palaute.grammat_jaljella = grammat - (valueHours * poltto)
+    palaute.tulos = Math.round(palaute.grammat_jaljella / (valueWeight * sukupuoliKerroin) * 100) / 100
+    palaute.juotu_litroissa = Math.round(litra * 100) / 100
+    setValueTulos(palaute)
   }
 
   function generItems() {
@@ -33,7 +47,9 @@ export default function App() {
   return (
     <ScrollView nestedScrollEnabled={true} >
       <View style={styles.container}>
-        <TextInput keyboardType='number-pad' defaultValue='0' style={styles.numberInput} />
+        <Text>Anna painosi</Text>
+        <TextInput keyboardType='number-pad' placeholder='0' style={styles.numberInput} onChangeText={(value) => setValueWeight(value)} />
+        <Text>Syötä juomiesi pullojen määrä (1=0.33l)</Text>
         <DropDownPicker
           listMode='MODAL'
           open={openBottle}
@@ -42,6 +58,7 @@ export default function App() {
           setOpen={setOpen}
           setValue={setValue}
         />
+        <Text>Missä ajassa joit alkoholin?</Text>
         <DropDownPicker
           listMode='MODAL'
           value={valueHours}
@@ -50,8 +67,11 @@ export default function App() {
           setOpen={setOpenHours}
           setValue={setValueHours}
         />
-        <RadioButton nameB1='Male' nameB2='Female'></RadioButton>
+        <Text>Kumpaa sukupuolta olet?</Text>
+        <RadioButton nameB1='Male' nameB2='Female' onChange={setValueGender} callback={setValueGender}></RadioButton>
+        <Text>Laske</Text>
         <Button onPress={() => laske({})} title='Calculate'></Button>
+        <Text>Tulos: {valueTulos.tulos}</Text>
       </View>
     </ScrollView >
   );

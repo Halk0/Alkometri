@@ -11,15 +11,17 @@ export class RadioButton extends Component {
         this.setSelected = this.setSelected.bind(this)
     }
 
-    setSelected(buttonId) {
+    setSelected(buttonId, callback) {
+        callback(buttonId)
         this.setState({ value: buttonId })
+        console.log(this.state.value)
     }
 
     render = () => {
         return (
             <View>
-                <Button title={this.props.nameB1} onPress={() => this.setSelected(this.name)}>{this.name}</Button>
-                <Button title={this.props.nameB2} onPress={() => this.setSelected(this.name2)}>{this.name2}</Button>
+                <Button title={this.props.nameB1} onPress={() => this.setSelected(this.props.nameB1, this.props.callback)}>{this.props.nameB1}</Button>
+                <Button title={this.props.nameB2} onPress={() => this.setSelected(this.props.nameB2, this.props.callback)}>{this.props.nameB2}</Button>
             </View >
         );
     }
