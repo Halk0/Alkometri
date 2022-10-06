@@ -21,9 +21,9 @@ export default function App() {
     var poltto = valueWeight / 10
     var sukupuoliKerroin = 0;
 
-    if (valueGender == 'Male') {
+    if (valueGender == 'Mies') {
       sukupuoliKerroin = 0.7;
-    } else if (valueGender == 'Female') {
+    } else if (valueGender == 'Nainen') {
       sukupuoliKerroin = 0.6;
     } else {
       console.log('Radio button not pressed');
@@ -47,31 +47,36 @@ export default function App() {
   return (
     <ScrollView nestedScrollEnabled={true} >
       <View style={styles.container}>
-        <Text>Anna painosi</Text>
+        <Text style={styles.title}>Anna painosi</Text>
         <TextInput keyboardType='number-pad' placeholder='0' style={styles.numberInput} onChangeText={(value) => setValueWeight(value)} />
-        <Text>Syötä juomiesi pullojen määrä (1=0.33l)</Text>
-        <DropDownPicker
-          listMode='MODAL'
-          open={openBottle}
-          value={valueBottle}
-          items={generItems()}
-          setOpen={setOpen}
-          setValue={setValue}
-        />
-        <Text>Missä ajassa joit alkoholin?</Text>
-        <DropDownPicker
-          listMode='MODAL'
-          value={valueHours}
-          open={openHours}
-          items={generItems()}
-          setOpen={setOpenHours}
-          setValue={setValueHours}
-        />
-        <Text>Kumpaa sukupuolta olet?</Text>
-        <RadioButton nameB1='Male' nameB2='Female' onChange={setValueGender} callback={setValueGender}></RadioButton>
-        <Text>Laske</Text>
-        <Button onPress={() => laske({})} title='Calculate'></Button>
-        <Text>Tulos: {valueTulos.tulos}</Text>
+        <Text style={styles.title}>Syötä juomiesi pullojen määrä (1=0.33l)</Text>
+        <View style={styles.dropDown}>
+          <DropDownPicker
+            listMode='MODAL'
+            open={openBottle}
+            value={valueBottle}
+            items={generItems()}
+            setOpen={setOpen}
+            setValue={setValue}
+          />
+        </View>
+        <Text style={styles.title}>Missä ajassa joit alkoholin?</Text>
+        <View style={styles.dropDown}>
+          <DropDownPicker
+            listMode='MODAL'
+            value={valueHours}
+            open={openHours}
+            items={generItems()}
+            setOpen={setOpenHours}
+            setValue={setValueHours}
+          />
+        </View>
+        <Text style={styles.title}>Kumpaa sukupuolta olet?</Text>
+        <RadioButton nameB1='Mies' nameB2='Nainen'
+          callback={setValueGender} colorSelected='#2196F3' colorNotSelected='#dcdcdc' style={styles.radioButton}></RadioButton>
+        <Text style={styles.title}>Laske</Text>
+        <Button onPress={() => laske({})} title='Laske' style={styles.submitButton}></Button>
+        <Text style={styles.result}>Tulos: {valueTulos.tulos}</Text>
       </View>
     </ScrollView >
   );
@@ -79,18 +84,35 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 50,
-    marginLeft: 10,
-    flex: 1,
-    zIndex: 1,
+    marginVertical: 100,
+    marginHorizontal: 20,
     backgroundColor: '#fff',
-    alignItems: 'flex-end',
-    justifyContent: 'center',
   },
   numberInput: {
-    height: 30,
-    flex: 0,
-    justifyContent: 'center',
-    alignSelf: 'auto'
+    width: '100%',
+    paddingBottom: 20,
+  },
+  radioButton: {
+    justifyContent: 'flex-start',
+    flexDirection: 'row',
+    paddingBottom: 20
+  },
+  dropDown: {
+    paddingBottom: 20
+  },
+  submitButton: {
+    justifyContent: 'flex-start',
+    width: 49
+  },
+  title: {
+    fontSize: 16,
+    fontWeight: '500',
+    paddingBottom: 10
+  },
+  result: {
+    fontSize: 20,
+    fontWeight: '500',
+    paddingTop: 50,
+    justifyContent: 'center'
   }
 });
