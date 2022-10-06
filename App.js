@@ -13,7 +13,6 @@ export default function App() {
   const [valueGender, setValueGender] = useState(null);
   const [valueTulos, setValueTulos] = useState({ tulos: 0, grammat_jaljella: 0, juotu_litroissa: 0 });
 
-
   function laske() {
     var palaute = {}
     var litra = valueBottle * 0.33
@@ -27,10 +26,24 @@ export default function App() {
       sukupuoliKerroin = 0.6;
     } else {
       console.log('Radio button not pressed');
+      palaute.vari = { color: 'red' }
+      setValueTulos('Sinun on annettava, jompikumpi sukupuolista.')
+
     }
     palaute.grammat_jaljella = grammat - (valueHours * poltto)
     palaute.tulos = Math.round(palaute.grammat_jaljella / (valueWeight * sukupuoliKerroin) * 100) / 100
     palaute.juotu_litroissa = Math.round(litra * 100) / 100
+    if (palaute.tulos < 0) {
+      palaute.tulos = 0
+    } else if (0.20 > palaute.tulos && palaute.tulos >= 0) {
+      palaute.vari = { color: 'green' }
+    } else if (0.5 > palaute.tulos && palaute.tulos >= 0.20) {
+      palaute.vari = { color: 'khaki' }
+    } else if (palaute.tulos >= 0.5) {
+      palaute.vari = { color: 'red' }
+    }
+    palaute.tulos += '‰'
+    console.log(palaute.vari)
     setValueTulos(palaute)
   }
 
@@ -79,7 +92,7 @@ export default function App() {
           callback={setValueGender} colorSelected='#2196F3' colorNotSelected='#dcdcdc' style={styles.radioButton}></RadioButton>
         <Text style={styles.title}>Laske</Text>
         <Button onPress={() => laske({})} title='Laske' style={styles.submitButton}></Button>
-        <Text style={styles.result}>Tulos: {valueTulos.tulos}‰</Text>
+        <Text style={[styles.result, valueTulos.vari]} >Tulos: {valueTulos.tulos}</Text>
       </View>
     </ScrollView >
   );
