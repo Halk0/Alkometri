@@ -27,8 +27,15 @@ export default function App() {
     } else {
       console.log('Radio button not pressed');
       palaute.vari = { color: 'red' }
-      setValueTulos('Sinun on annettava, jompikumpi sukupuolista.')
-
+      palaute.tulos = 'Sinun on annettava jompikumpi sukupuolista.'
+      setValueTulos(palaute)
+      return
+    }
+    if (valueWeight == 0) {
+      palaute.vari = { color: 'red' }
+      palaute.tulos = 'Sinun on annettava painosi.'
+      setValueTulos(palaute)
+      return
     }
     palaute.grammat_jaljella = grammat - (valueHours * poltto)
     palaute.tulos = Math.round(palaute.grammat_jaljella / (valueWeight * sukupuoliKerroin) * 100) / 100
