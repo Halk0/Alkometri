@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
-import { StyleSheet, Text, ScrollView, View, TextInput, Button } from 'react-native';
+import { StyleSheet, Text, ScrollView, View, TextInput, Button, Image } from 'react-native';
 import { RadioButton } from './custom-components/radiobutton';
 import DropDownPicker from 'react-native-dropdown-picker';
 
@@ -47,6 +47,9 @@ export default function App() {
   return (
     <ScrollView nestedScrollEnabled={true} >
       <View style={styles.container}>
+        <View style={styles.imageView}>
+          <Image source={require('./assets/IMG_0320.jpg')} style={styles.image} />
+        </View>
         <Text style={styles.title}>Anna painosi</Text>
         <TextInput keyboardType='number-pad' placeholder='0' style={styles.numberInput} onChangeText={(value) => setValueWeight(value)} />
         <Text style={styles.title}>Syötä juomiesi pullojen määrä (1=0.33l)</Text>
@@ -76,7 +79,7 @@ export default function App() {
           callback={setValueGender} colorSelected='#2196F3' colorNotSelected='#dcdcdc' style={styles.radioButton}></RadioButton>
         <Text style={styles.title}>Laske</Text>
         <Button onPress={() => laske({})} title='Laske' style={styles.submitButton}></Button>
-        <Text style={styles.result}>Tulos: {valueTulos.tulos}</Text>
+        <Text style={styles.result}>Tulos: {valueTulos.tulos}‰</Text>
       </View>
     </ScrollView >
   );
@@ -87,6 +90,14 @@ const styles = StyleSheet.create({
     marginVertical: 100,
     marginHorizontal: 20,
     backgroundColor: '#fff',
+  },
+  image: {
+    width: 200,
+    height: 200,
+  },
+  imageView: {
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   numberInput: {
     width: '100%',
