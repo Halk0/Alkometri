@@ -1,8 +1,8 @@
-import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
-import { StyleSheet, Text, ScrollView, View, TextInput, Button, Image } from 'react-native';
+import { Text, ScrollView, View, TextInput, Button, Image } from 'react-native';
 import { RadioButton } from './custom-components/radiobutton';
 import DropDownPicker from 'react-native-dropdown-picker';
+import { styles } from './styles'
 
 export default function App() {
   const [openBottle, setOpen] = useState(false);
@@ -12,7 +12,6 @@ export default function App() {
   const [valueWeight, setValueWeight] = useState(0);
   const [valueGender, setValueGender] = useState(null);
   const [valueTulos, setValueTulos] = useState({ tulos: 0, grammat_jaljella: 0, juotu_litroissa: 0 });
-
 
   function laske() {
     var palaute = {}
@@ -27,10 +26,31 @@ export default function App() {
       sukupuoliKerroin = 0.6;
     } else {
       console.log('Radio button not pressed');
+      palaute.vari = { color: 'red' }
+      palaute.tulos = 'Sinun on annettava jompikumpi sukupuolista.'
+      setValueTulos(palaute)
+      return
+    }
+    if (valueWeight == 0) {
+      palaute.vari = { color: 'red' }
+      palaute.tulos = 'Sinun on annettava painosi.'
+      setValueTulos(palaute)
+      return
     }
     palaute.grammat_jaljella = grammat - (valueHours * poltto)
     palaute.tulos = Math.round(palaute.grammat_jaljella / (valueWeight * sukupuoliKerroin) * 100) / 100
     palaute.juotu_litroissa = Math.round(litra * 100) / 100
+    if (palaute.tulos < 0) {
+      palaute.tulos = 0
+    } else if (0.20 > palaute.tulos && palaute.tulos >= 0) {
+      palaute.vari = { color: 'green' }
+    } else if (0.5 > palaute.tulos && palaute.tulos >= 0.20) {
+      palaute.vari = { color: 'khaki' }
+    } else if (palaute.tulos >= 0.5) {
+      palaute.vari = { color: 'red' }
+    }
+    palaute.tulos += '‰'
+    console.log(palaute.vari)
     setValueTulos(palaute)
   }
 
@@ -79,51 +99,10 @@ export default function App() {
           callback={setValueGender} colorSelected='#2196F3' colorNotSelected='#dcdcdc' style={styles.radioButton}></RadioButton>
         <Text style={styles.title}>Laske</Text>
         <Button onPress={() => laske({})} title='Laske' style={styles.submitButton}></Button>
-        <Text style={styles.result}>Tulos: {valueTulos.tulos}‰</Text>
+        <Text style={[styles.result, valueTulos.vari]} >Tulos: {valueTulos.tulos}</Text>
       </View>
     </ScrollView >
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    marginVertical: 100,
-    marginHorizontal: 20,
-    backgroundColor: '#fff',
-  },
-  image: {
-    width: 200,
-    height: 200,
-  },
-  imageView: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  numberInput: {
-    width: '100%',
-    paddingBottom: 20,
-  },
-  radioButton: {
-    justifyContent: 'flex-start',
-    flexDirection: 'row',
-    paddingBottom: 20
-  },
-  dropDown: {
-    paddingBottom: 20
-  },
-  submitButton: {
-    justifyContent: 'flex-start',
-    width: 49
-  },
-  title: {
-    fontSize: 16,
-    fontWeight: '500',
-    paddingBottom: 10
-  },
-  result: {
-    fontSize: 20,
-    fontWeight: '500',
-    paddingTop: 50,
-    justifyContent: 'center'
-  }
-});
+
